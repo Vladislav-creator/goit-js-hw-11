@@ -1,0 +1,2 @@
+const KEY = '39397565-58f1881c1b7436fe337839852'
+export { KEY };
