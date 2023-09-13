@@ -34,8 +34,9 @@ function onSearchForm(e) {
     return;
   }
 
-  fetchImages(query, page, perPage)
-    .then(data => {
+  async function makeMarkup(query, page, perPage) {
+    try {
+    const data= await fetchImages(query, page, perPage);
       if (data.totalHits === 0) {
         Notiflix.Notify.failure(
           'Sorry, there are no images matching your search query. Please try again.',
@@ -45,37 +46,74 @@ function onSearchForm(e) {
         simpleLightBox = new SimpleLightbox('.gallery a').refresh();
         Notiflix.Notify.success(`Hooray! We found ${data.totalHits} images.`);
       }
-    })
-    .catch(error => console.log(error))
-    .finally(() => {
+    }
+    catch{
+      console.log(error);
+    } 
+    finally{
       searchForm.reset();
-    });
+    }
+  }
+makeMarkup(query, page, perPage)
+
+  // fetchImages(query, page, perPage)
+  //   .then(data => {
+  //     if (data.totalHits === 0) {
+  //       Notiflix.Notify.failure(
+  //         'Sorry, there are no images matching your search query. Please try again.',
+  //       );
+  //     } else {
+  //       renderGallery(data.hits);
+  //       simpleLightBox = new SimpleLightbox('.gallery a').refresh();
+  //       Notiflix.Notify.success(`Hooray! We found ${data.totalHits} images.`);
+  //     }
+  //   })
+  //   .catch(error => console.log(error))
+  //   .finally(() => {
+  //     searchForm.reset();
+  //   });
 }
 
 function onloadMore() {
   page += 1;
   simpleLightBox.destroy();
   // simpleLightBox.refresh();
+  async function makeMarkup(query, page, perPage) {
+    try {
+    const data= await fetchImages(query, page, perPage);
+    renderGallery(data.hits);
+    simpleLightBox = new SimpleLightbox('.gallery a').refresh();
+          const totalPages = Math.ceil(data.totalHits / perPage);
+          if (page > totalPages) {
+            Notiflix.Notify.failure(
+              "We're sorry, but you've reached the end of search results.",
+            );
+          }
+    } catch {
+    console.log(error);
+    }
+    }
+    makeMarkup(query, page, perPage)
 
-  fetchImages(query, page, perPage)
-    .then(data => {
-      renderGallery(data.hits);
-      simpleLightBox = new SimpleLightbox('.gallery a').refresh();
+  // fetchImages(query, page, perPage)
+  //   .then(data => {
+  //     renderGallery(data.hits);
+  //     simpleLightBox = new SimpleLightbox('.gallery a').refresh();
 
-      const totalPages = Math.ceil(data.totalHits / perPage);
+  //     const totalPages = Math.ceil(data.totalHits / perPage);
 
-      if (page > totalPages) {
-        Notiflix.Notify.failure(
-          "We're sorry, but you've reached the end of search results.",
-        );
-      }
-    })
-    .catch(error => console.log(error));
+  //     if (page > totalPages) {
+  //       Notiflix.Notify.failure(
+  //         "We're sorry, but you've reached the end of search results.",
+  //       );
+  //     }
+  //   })
+  //   .catch(error => console.log(error));
 }
 
 function checkIfEndOfPage() {
   return (
-    window.innerHeight + window.pageYOffset >=
+    window.innerHeight + window.scrollY >=
     document.documentElement.scrollHeight
   );
 }
