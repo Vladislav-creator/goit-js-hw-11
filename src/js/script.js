@@ -55,22 +55,6 @@ function onSearchForm(e) {
   }
   makeMarkup(query, page, perPage);
 
-  // fetchImages(query, page, perPage)
-  //   .then(data => {
-  //     if (data.totalHits === 0) {
-  //       Notiflix.Notify.failure(
-  //         'Sorry, there are no images matching your search query. Please try again.',
-  //       );
-  //     } else {
-  //       renderGallery(data.hits);
-  //       simpleLightBox = new SimpleLightbox('.gallery a').refresh();
-  //       Notiflix.Notify.success(`Hooray! We found ${data.totalHits} images.`);
-  //     }
-  //   })
-  //   .catch(error => console.log(error))
-  //   .finally(() => {
-  //     searchForm.reset();
-  //   });
 }
 
 function onloadMore() {
@@ -100,20 +84,7 @@ console.log(`data.hits.length:${data.hits.length}`);
   }
   makeMarkup(query, page, perPage);
 
-  // fetchImages(query, page, perPage)
-  //   .then(data => {
-  //     renderGallery(data.hits);
-  //     simpleLightBox = new SimpleLightbox('.gallery a').refresh();
-
-  //     const totalPages = Math.ceil(data.totalHits / perPage);
-
-  //     if (page > totalPages) {
-  //       Notiflix.Notify.failure(
-  //         "We're sorry, but you've reached the end of search results.",
-  //       );
-  //     }
-  //   })
-  //   .catch(error => console.log(error));
+ 
 }
 
 function checkIfEndOfPage() {
