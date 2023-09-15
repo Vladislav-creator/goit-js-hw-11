@@ -59,8 +59,7 @@ function onSearchForm(e) {
 
 function onloadMore() {
   page += 1;
-  //console.log(page);
-  //console.log( perPage);
+  
   simpleLightBox.destroy();
   
   async function makeMarkup(query, page, perPage) {
