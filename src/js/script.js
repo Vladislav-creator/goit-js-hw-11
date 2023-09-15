@@ -2,10 +2,10 @@ import Notiflix from 'notiflix';
 import SimpleLightbox from 'simplelightbox';
 import 'simplelightbox/dist/simple-lightbox.min.css';
 import { fetchImages } from './fetchImages';
-import {renderGallery} from './renderGallery'
+import { renderGallery } from './renderGallery';
 const searchForm = document.getElementById('search-form');
 const gallery = document.querySelector('.gallery');
-export {gallery}
+export { gallery };
 let query = '';
 let page = 1;
 let simpleLightBox;
@@ -13,48 +13,47 @@ const perPage = 40;
 
 searchForm.addEventListener('submit', onSearchForm);
 
-
-
-  
-
-  // Цей код дозволяє автоматично прокручувати сторінку на висоту 2 карток галереї, коли вона завантажується
-  
-
+// Цей код дозволяє автоматично прокручувати сторінку на висоту 2 карток галереї, коли вона завантажується
 
 function onSearchForm(e) {
   e.preventDefault();
+  window.removeEventListener('scroll', showLoadMorePage);
   page = 1;
   query = e.currentTarget.elements.searchQuery.value.trim();
   gallery.innerHTML = '';
 
   if (query === '') {
     Notiflix.Notify.failure(
-      'The search string cannot be empty. Please specify your search query.',
+      'The search string cannot be empty. Please specify your search query.'
     );
     return;
   }
 
   async function makeMarkup(query, page, perPage) {
     try {
-    const data= await fetchImages(query, page, perPage);
+      const data = await fetchImages(query, page, perPage);
+
       if (data.totalHits === 0) {
         Notiflix.Notify.failure(
-          'Sorry, there are no images matching your search query. Please try again.',
+          'Sorry, there are no images matching your search query. Please try again.'
         );
       } else {
+        
         renderGallery(data.hits);
         simpleLightBox = new SimpleLightbox('.gallery a').refresh();
         Notiflix.Notify.success(`Hooray! We found ${data.totalHits} images.`);
+        if (data.hits.length < data.totalHits) {
+          window.addEventListener('scroll', showLoadMorePage);
+          
+        }
       }
-    }
-    catch{
+    } catch {
       console.log(error);
-    } 
-    finally{
+    } finally {
       searchForm.reset();
     }
   }
-makeMarkup(query, page, perPage)
+  makeMarkup(query, page, perPage);
 
   // fetchImages(query, page, perPage)
   //   .then(data => {
@@ -76,24 +75,30 @@ makeMarkup(query, page, perPage)
 
 function onloadMore() {
   page += 1;
+  //console.log(page);
+  //console.log( perPage);
   simpleLightBox.destroy();
-  // simpleLightBox.refresh();
+  
   async function makeMarkup(query, page, perPage) {
     try {
-    const data= await fetchImages(query, page, perPage);
-    renderGallery(data.hits);
-    simpleLightBox = new SimpleLightbox('.gallery a').refresh();
-          const totalPages = Math.ceil(data.totalHits / perPage);
-          if (page > totalPages) {
-            Notiflix.Notify.failure(
-              "We're sorry, but you've reached the end of search results.",
-            );
-          }
+      const data = await fetchImages(query, page, perPage);
+console.log(`data.hits.length:${data.hits.length}`);
+          // console.log(`data.totalHits:${data.totalHits}`);
+      renderGallery(data.hits);
+      simpleLightBox = new SimpleLightbox('.gallery a').refresh();
+      const totalPages = Math.ceil(data.totalHits / perPage);
+      //console.log(totalPages);
+      if (page > totalPages) {
+        Notiflix.Notify.failure(
+          "We're sorry, but you've reached the end of search results."
+        );
+        window.removeEventListener('scroll', showLoadMorePage);
+      }
     } catch {
-    console.log(error);
+      console.log(error);
     }
-    }
-    makeMarkup(query, page, perPage)
+  }
+  makeMarkup(query, page, perPage);
 
   // fetchImages(query, page, perPage)
   //   .then(data => {
@@ -113,8 +118,7 @@ function onloadMore() {
 
 function checkIfEndOfPage() {
   return (
-    window.innerHeight + window.scrollY >=
-    document.documentElement.scrollHeight
+    window.innerHeight + window.scrollY >= document.documentElement.scrollHeight
   );
 }
 
@@ -126,7 +130,6 @@ function showLoadMorePage() {
 }
 
 // Додати подію на прокручування сторінки, яка викликає функцію showLoadMorePage
-window.addEventListener('scroll', showLoadMorePage);
 
 // кнопка “вгору”->
 arrowTop.onclick = function () {
