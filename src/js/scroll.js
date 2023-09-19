@@ -25,3 +25,4 @@ SmoothScroll({
     // Поддержка тачпада
     touchpadSupport: true,
   });
+  export { SmoothScroll };
