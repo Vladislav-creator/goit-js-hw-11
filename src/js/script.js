@@ -3,7 +3,6 @@ import SimpleLightbox from 'simplelightbox';
 import 'simplelightbox/dist/simple-lightbox.min.css';
 import { fetchImages } from './fetchImages';
 import { renderGallery } from './renderGallery';
-import { SmoothScroll } from "./scroll.js";
 const searchForm = document.getElementById('search-form');
 const gallery = document.querySelector('.gallery');
 export { gallery };
