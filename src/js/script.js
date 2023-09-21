@@ -10,9 +10,7 @@ let query = '';
 let page = 1;
 let simpleLightBox;
 const perPage = 40;
-const { height: cardHeight } = document
- .querySelector('.gallery')
- .firstElementChild.getBoundingClientRect();
+
 searchForm.addEventListener('submit', onSearchForm);
 
 // Цей код дозволяє автоматично прокручувати сторінку на висоту 2 карток галереї, коли вона завантажується
@@ -81,7 +79,11 @@ function onloadMore() {
   }
   makeMarkup(query, page, perPage);
   // Цей код дозволяє автоматично прокручувати сторінку на висоту 2 карток галереї, коли вона завантажується
-window.scrollBy({
+  const { height: cardHeight } = document
+  .querySelector('.gallery')
+  .firstElementChild.getBoundingClientRect();
+
+  window.scrollBy({
  top: cardHeight * 2,
  behavior: 'smooth',
 });
